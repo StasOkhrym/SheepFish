@@ -16,11 +16,11 @@ from sheep_fish.celery import app
 # {"order_number": 1,
 #  "items" : {
 #      "pizza": {
-#          "quantity": 1
+#          "quantity": 1,
 #          "price": 15
 #      },
 #      "pasta": {
-#          "quantity": 2
+#          "quantity": 2,
 #          "price": 30
 #      },
 #  }
@@ -34,10 +34,7 @@ class Item:
     price: int | float
 
 
-@dataclass
 class Order:
-    order_number: int
-    items: list[Item]
 
     def __init__(self, order_number: int, items: dict):
         self.order_number = order_number

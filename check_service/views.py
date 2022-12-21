@@ -1,7 +1,8 @@
 from django.conf import settings
-from django.http import FileResponse, JsonResponse
+from django.http import FileResponse
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from check_service.models import Printer, Check
 from check_service.renderers import PDFRenderer
@@ -32,7 +33,7 @@ class CheckViewSet(viewsets.ModelViewSet):
                     check_data["order"]["order_number"]
                     == check.order.order_number
                 ):
-                    return JsonResponse(
+                    return Response(
                         {"order": "such order already exists"},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
@@ -40,18 +41,18 @@ class CheckViewSet(viewsets.ModelViewSet):
             point_id = printer.point_id
             if Printer.objects.filter(point_id=point_id).exists():
                 self.perform_create(serializer)
-                return JsonResponse(
+                return Response(
                     {"check": "Check was created"},
                     status=status.HTTP_201_CREATED,
                 )
             else:
-                return JsonResponse(
+                return Response(
                     {"printer": "There are no printers at mentioned point"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
         else:
-            return JsonResponse(
+            return Response(
                 {"error": "Check data is incorrect"},
                 status=status.HTTP_400_BAD_REQUEST,
             )

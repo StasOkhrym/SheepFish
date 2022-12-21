@@ -25,7 +25,7 @@ class Printer(models.Model):
 class Check(models.Model):
     printer = models.ForeignKey(Printer, on_delete=models.DO_NOTHING)
     type = models.CharField(max_length=60, choices=TYPE_CHOICES)
-    order = models.JSONField()
+    order = models.JSONField(null=True, blank=True)
     status = models.CharField(
         max_length=60,
         choices=STATUS_CHOICES,

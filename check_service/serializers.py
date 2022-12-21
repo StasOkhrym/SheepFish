@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from check_service.models import Printer, Check
-from check_service.tasks import Order, Item
 
 
 class PrinterSerializer(serializers.ModelSerializer):
@@ -10,33 +9,33 @@ class PrinterSerializer(serializers.ModelSerializer):
         model = Printer
         fields = (
             "id",
-            "check_type",
-            "api_key",
+            "name",
             "check_type",
             "point_id",
         )
 
 
-class ItemSerializer(serializers.ModelSerializer):
+class ItemSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    quantity = serializers.IntegerField()
+    price = serializers.FloatField()
 
-    class Meta:
-        model = Item
-        fields = (
-            "name",
-            "quantity",
-            "price",
-        )
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    items = ItemSerializer(many=True)
+class OrderSerializer(serializers.Serializer):
+    order_number = serializers.IntegerField()
+    items = ItemSerializer(many=True, allow_null=True)
 
-    class Meta:
-        model = Order
-        fields = (
-            "order_number",
-            "items",
-        )
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
 
 
 class CheckSerializer(serializers.ModelSerializer):

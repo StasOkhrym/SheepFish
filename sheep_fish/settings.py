@@ -82,11 +82,11 @@ WSGI_APPLICATION = "sheep_fish.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'database1',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': "postgres",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": os.getenv("HOST", "localhost"),
+        "PORT": os.getenv("PORT", "5433"),
     }
 }
 
