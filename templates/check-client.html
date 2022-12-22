@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Client Check</title>
+</head>
+<body>
+  {% if order %}
+    <h1>Order: {{ order.order_number }}</h1>
+    <tr>
+      <th>Name</th>
+      <th>Quantity</th>
+      <th>Price</th>
+    </tr>
+    {% for item in order.items %}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ task.item_price }}</td>
+      </tr>
+    {% endfor %}
+    <h3>Total Price: {{ order.total_price }}</h3>
+  {% else %}
+    <h1>Nothing is here</h1>
+  {% endif %}
+</body>
+</html>
