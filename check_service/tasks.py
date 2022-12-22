@@ -6,11 +6,14 @@ import requests
 from django.conf import settings
 from django.core.files import File
 from django.template import Template, Context
+from requests import Response
 
+from check_service.models import Check
+from orders.models import Order
 from sheep_fish.celery import app
 
 
-def get_pdf_check(html):
+def get_pdf_check(html: bytes) -> Response:
     url = settings.HTML_TO_PDF_URL
     encoding = "utf-8"
 
@@ -23,7 +26,12 @@ def get_pdf_check(html):
     return response
 
 
-def save_to_pdf_field(check, response, pdf, pdf_name):
+def save_to_pdf_field(
+        check: Check,
+        response: Response,
+        pdf: bytes,
+        pdf_name: str
+) -> None:
     if response.status_code == 200:
         check.status = "rendered"
         check.save()
@@ -31,7 +39,7 @@ def save_to_pdf_field(check, response, pdf, pdf_name):
     check.save()
 
 
-def render_template(order, template_name: str) -> bytes:
+def render_template(order: Order, template_name: str) -> bytes:
     with open(template_name, "r") as f:
         template = Template(f.read())
     html_file = template.render(context=Context({"order": order}))
@@ -39,9 +47,9 @@ def render_template(order, template_name: str) -> bytes:
 
 
 @app.task
-def render_pdf_check(check, template):
+def render_pdf_check(check: Check, template_name: str) -> None:
     order = check.order
-    html = render_template(order=order, template_name=template)
+    html = render_template(order=order, template_name=template_name)
     response = get_pdf_check(html)
     pdf_file = response.content
     pdf_name = f"{order.order_number}_{check.type}.pdf"

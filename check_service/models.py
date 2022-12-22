@@ -27,9 +27,7 @@ class Check(models.Model):
     type = models.CharField(max_length=60, choices=TYPE_CHOICES)
     order = models.ForeignKey("orders.Order", on_delete=models.CASCADE)
     status = models.CharField(
-        max_length=60,
-        choices=STATUS_CHOICES,
-        default="new"
+        max_length=60, choices=STATUS_CHOICES, default="new"
     )
     pdf_file = models.FileField(
         upload_to="pdf/",

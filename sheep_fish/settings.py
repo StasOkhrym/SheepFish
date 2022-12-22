@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "debug_toolbar",
     "check_service",
-    "orders"
+    "orders",
 ]
 
 MIDDLEWARE = [
@@ -81,9 +81,9 @@ WSGI_APPLICATION = "sheep_fish.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "postgres",
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "postgres",
         "USER": "postgres",
         "PASSWORD": "postgres",
         "HOST": os.getenv("HOST", "localhost"),
@@ -137,9 +137,9 @@ CLIENT_CHECK_TEMPLATE = BASE_DIR / "templates/check-client.html"
 # Celery settings
 CELERY_BROKER_URL = "redis://localhost:6379/"
 CELERY_RESULT_BACKEND = "redis://localhost:6379/"
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT = ['json', 'yaml']
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT = ["json", "yaml"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

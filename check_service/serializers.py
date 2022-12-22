@@ -5,7 +5,6 @@ from orders.serilalizers import OrderSerializer
 
 
 class PrinterSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Printer
         fields = (
