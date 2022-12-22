@@ -28,10 +28,7 @@ def get_pdf_check(html: bytes) -> Response:
 
 
 def save_to_pdf_field(
-        check: Check,
-        response: Response,
-        pdf: bytes,
-        pdf_name: str
+    check: Check, response: Response, pdf: bytes, pdf_name: str
 ) -> None:
     if response.status_code == 200:
         check.status = "rendered"
@@ -48,17 +45,25 @@ def render_template(order: Order, template_name: str) -> bytes:
 
 
 @shared_task
-def render_pdf_check(check_id, ) -> None:
+def render_pdf_check_kitchen(check_id: int) -> None:
     check = Check.objects.get(id=check_id)
     order = check.order
-    if check.type == "client":
-        html = render_template(
-            order=order,
-            template_name=settings.CLIENT_CHECK_TEMPLATE)
-    if check.type == "kitchen":
-        html = render_template(
-            order=order,
-            template_name=settings.KITCHEN_CHECK_TEMPLATE)
+    html = render_template(
+        order=order, template_name=settings.KITCHEN_CHECK_TEMPLATE
+    )
+    response = get_pdf_check(html)
+    pdf_file = response.content
+    pdf_name = f"{order.order_number}_{check.type}.pdf"
+    save_to_pdf_field(check, response, pdf_file, pdf_name)
+
+
+@shared_task
+def render_pdf_check_client(check_id: int) -> None:
+    check = Check.objects.get(id=check_id)
+    order = check.order
+    html = render_template(
+        order=order, template_name=settings.CLIENT_CHECK_TEMPLATE
+    )
     response = get_pdf_check(html)
     pdf_file = response.content
     pdf_name = f"{order.order_number}_{check.type}.pdf"

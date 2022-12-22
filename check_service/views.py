@@ -11,6 +11,7 @@ from check_service.serializers import (
     CheckSerializer,
 )
 from check_service.tasks import render_pdf_check
+from sheep_fish.celery import app
 
 
 class PrinterViewSet(viewsets.ModelViewSet):
@@ -64,9 +65,9 @@ class CheckViewSet(viewsets.ModelViewSet):
         printers = Printer.objects.filter(point_id=check.printer.point_id)
         for printer in printers:
             if printer.check_type == "kitchen":
-                render_pdf_check.delay(check_id=check.id)
+                app.send_task("render_pdf_check_kitchen", (check.id))
             if printer.check_type == "client":
-                render_pdf_check.delay(check_id=check.id)
+                app.send_task("render_pdf_check_client", (check.id))
 
     @action(methods=["get"], detail=True, renderer_classes=(PDFRenderer,))
     def download(self, *args, **kwargs):
