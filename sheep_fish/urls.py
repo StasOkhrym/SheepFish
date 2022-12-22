@@ -21,4 +21,5 @@ urlpatterns = [
     path("api/", include("rest_framework.urls")),
     path('__debug__/', include('debug_toolbar.urls')),
     path("api/check_service/", include("check_service.urls", namespace="check_service")),
+    path("api/orders/", include("orders.urls", namespace="orders")),
 ]

@@ -1,4 +1,5 @@
-FROM python:3-alpine
+FROM python:3.10-slim-buster
+LABEL maintainer="s.okhrym@gmail.com"
 
 ENV PYTHONUNBUFFERED=1
 

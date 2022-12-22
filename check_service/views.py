@@ -30,7 +30,7 @@ class CheckViewSet(viewsets.ModelViewSet):
             checks = Check.objects.all()
             for check in checks:
                 if (
-                    check_data["order"]["order_number"]
+                    check_data["order"].order_number
                     == check.order.order_number
                 ):
                     return Response(
@@ -52,6 +52,7 @@ class CheckViewSet(viewsets.ModelViewSet):
                 )
 
         else:
+            print(serializer.errors)
             return Response(
                 {"error": "Check data is incorrect"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -59,7 +60,7 @@ class CheckViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
-        check = self.get_object()
+        check = Check.objects.last()
         printers = Printer.objects.filter(point_id=check.printer.point_id)
         for printer in printers:
             if printer.check_type == "kitchen":

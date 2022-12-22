@@ -1,47 +1,13 @@
-from base64 import b64encode
-from dataclasses import dataclass
-from io import BytesIO
 import json
+from base64 import b64encode
+from io import BytesIO
+
 import requests
-from celery import shared_task
 from django.conf import settings
-from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.http import HttpResponse
-from django.template import Template, Context
-from django.template.loader import get_template
 from django.core.files import File
+from django.template import Template, Context
+
 from sheep_fish.celery import app
-
-# {"order_number": 1,
-#  "items" : {
-#      "pizza": {
-#          "quantity": 1,
-#          "price": 15
-#      },
-#      "pasta": {
-#          "quantity": 2,
-#          "price": 30
-#      },
-#  }
-# }
-
-
-@dataclass
-class Item:
-    name: str
-    quantity: int
-    price: int | float
-
-
-class Order:
-
-    def __init__(self, order_number: int, items: dict):
-        self.order_number = order_number
-        self.items = [
-            Item(name=name, quantity=data["quantity"], price=data["price"])
-            for name, data in items.items()
-        ]
 
 
 def get_pdf_check(html):
@@ -74,7 +40,7 @@ def render_template(order, template_name: str) -> bytes:
 
 @app.task
 def render_pdf_check(check, template):
-    order = Order(**check.order)
+    order = check.order
     html = render_template(order=order, template_name=template)
     response = get_pdf_check(html)
     pdf_file = response.content
