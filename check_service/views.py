@@ -10,6 +10,7 @@ from check_service.serializers import (
     PrinterSerializer,
     CheckSerializer,
 )
+from orders.models import Order
 from sheep_fish.celery import app
 
 
