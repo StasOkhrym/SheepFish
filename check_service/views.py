@@ -10,7 +10,7 @@ from check_service.serializers import (
     PrinterSerializer,
     CheckSerializer,
 )
-from sheep_fish.celery import app
+from check_service.tasks import render_pdf_check
 
 
 class PrinterViewSet(viewsets.ModelViewSet):
@@ -30,11 +30,11 @@ class CheckViewSet(viewsets.ModelViewSet):
             checks = Check.objects.all()
             for check in checks:
                 if (
-                    check_data["order"].order_number
+                    check_data["order"]
                     == check.order.order_number
                 ):
                     return Response(
-                        {"order": "such order already exists"},
+                        {"Check": "Check with this order already exists"},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
             printer = check_data["printer"]
@@ -64,15 +64,9 @@ class CheckViewSet(viewsets.ModelViewSet):
         printers = Printer.objects.filter(point_id=check.printer.point_id)
         for printer in printers:
             if printer.check_type == "kitchen":
-                app.send_task(
-                    "check_service.tasks.render_pdf_client",
-                    (check, settings.KITCHEN_CHECK_TEMPLATE),
-                )
+                render_pdf_check.delay(check_id=check.id)
             if printer.check_type == "client":
-                app.send_task(
-                    "check_service.tasks.render_pdf_client",
-                    (check, settings.CLIENT_CHECK_TEMPLATE),
-                )
+                render_pdf_check.delay(check_id=check.id)
 
     @action(methods=["get"], detail=True, renderer_classes=(PDFRenderer,))
     def download(self, *args, **kwargs):

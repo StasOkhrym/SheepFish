@@ -9,13 +9,14 @@ class ItemSerializer(serializers.ModelSerializer):
         model = Item
         fields = (
             "id",
+            "name",
             "quantity",
             "price",
         )
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = ItemSerializer(many=True)
+    # items = ItemSerializer(many=True)
 
     class Meta:
         model = Order

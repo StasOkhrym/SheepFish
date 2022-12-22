@@ -18,7 +18,7 @@ class Item(models.Model):
 
 class Order(models.Model):
     order_number = models.IntegerField(unique=True, primary_key=True)
-    items = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
+    items = models.ManyToManyField(Item, related_name="orders")
 
     def __str__(self) -> str:
         return f"Order: {self.order_number}"

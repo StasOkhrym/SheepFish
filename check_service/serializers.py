@@ -16,7 +16,7 @@ class PrinterSerializer(serializers.ModelSerializer):
 
 
 class CheckSerializer(serializers.ModelSerializer):
-    order = OrderSerializer(many=False)
+    # order = OrderSerializer(many=False, read_only=True)
 
     class Meta:
         model = Check
@@ -28,3 +28,5 @@ class CheckSerializer(serializers.ModelSerializer):
             "status",
             "pdf_file",
         )
+
+    # def create(self, validated_data):

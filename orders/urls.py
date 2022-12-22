@@ -3,8 +3,8 @@ from orders.views import ItemViewSet, OrderViewSet
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register("printers", ItemViewSet)
-router.register("checks", OrderViewSet)
+router.register("items", ItemViewSet)
+router.register("orders", OrderViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),

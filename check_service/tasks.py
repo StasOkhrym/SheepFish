@@ -3,6 +3,7 @@ from base64 import b64encode
 from io import BytesIO
 
 import requests
+from celery import shared_task
 from django.conf import settings
 from django.core.files import File
 from django.template import Template, Context
@@ -46,10 +47,18 @@ def render_template(order: Order, template_name: str) -> bytes:
     return bytes(str(html_file), encoding="utf8")
 
 
-@app.task
-def render_pdf_check(check: Check, template_name: str) -> None:
+@shared_task
+def render_pdf_check(check_id, ) -> None:
+    check = Check.objects.get(id=check_id)
     order = check.order
-    html = render_template(order=order, template_name=template_name)
+    if check.type == "client":
+        html = render_template(
+            order=order,
+            template_name=settings.CLIENT_CHECK_TEMPLATE)
+    if check.type == "kitchen":
+        html = render_template(
+            order=order,
+            template_name=settings.KITCHEN_CHECK_TEMPLATE)
     response = get_pdf_check(html)
     pdf_file = response.content
     pdf_name = f"{order.order_number}_{check.type}.pdf"
