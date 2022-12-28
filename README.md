@@ -19,8 +19,8 @@ Just run `make test_env`
 
 #### When project is running
 
-- Apply db migrations `make migrations`
-- Run local server
+- Apply db migrations `python manage.py migrate`
+- Run local server `python manage.py runserver`
 
 ### Project description
 The service receives information about a new order, creates checks in the database for all printers of the point specified in the order.
