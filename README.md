@@ -7,14 +7,18 @@
 - Build containers
 - Run project
 
-#### Create local env file
+#### Create local env 
 
-Just run `make test_env`
+```
+python3 -m venv venv
+source venv/bin/activate (Linux and macOS) or 
+venv\Scripts\activate (Windows)
+```
 
 
 #### Build containers and run
 
-`docker-compose up --build`
+```docker-compose up --build```
 
 
 #### When project is running
